@@ -44,6 +44,7 @@
   ],
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.12.1",
+    "@hookform/resolvers": "^2.6.0",
     "chart.js": "2.9.3",
     "classnames": "2.2.6",
     "firebase": "^8.6.8",
@@ -56,9 +57,11 @@
     "react-datetime": "2.16.3",
     "react-dom": "16.12.0",
     "react-google-maps": "9.4.5",
+    "react-hook-form": "^7.9.0",
     "react-router-dom": "5.1.2",
     "react-scripts": "4.0.3",
-    "reactstrap": "8.4.1"
+    "reactstrap": "8.4.1",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/googlemaps": "3.39.2",
