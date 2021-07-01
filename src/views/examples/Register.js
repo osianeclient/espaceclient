@@ -17,6 +17,7 @@
 */
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 // reactstrap components
 import {
@@ -37,6 +38,12 @@ import {
 import { useAuth } from "../../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(8).max(32).required(),
+  confirmPassword: yup.string().min(8).max(32).required()
+});
+
 export default function Register() {
     const emailRef = useRef("")
     const passwordRef = useRef("")
@@ -45,8 +52,9 @@ export default function Register() {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    async function handleSubmit(e) {
+    async function submit(e) {
         e.preventDefault()
 
         if (passwordRef.current.value !== confirmPasswordRef.current.value) {
