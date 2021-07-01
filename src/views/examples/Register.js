@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useRef, useState } from "react";
 
 // reactstrap components
 import {
@@ -33,62 +33,51 @@ import {
   Col
 } from "reactstrap";
 
-class Register extends React.Component {
-  render() {
+import { useAuth } from "../../contexts/AuthContext"
+import { Link, useHistory } from "react-router-dom"
+
+export default function Register() {
+    const emailRef = useRef("")
+    const passwordRef = useRef("")
+    const confirmPasswordRef = useRef("")
+    const { signup } = useAuth()
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+    const history = useHistory()
+
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+            return setError("Passwords do not match")
+        }
+
+        try {
+            setError("")
+            setLoading(true)
+            console.log(emailRef.current.value, emailRef.current.value)
+            await signup(emailRef.current.value, passwordRef.current.value)
+            history.push("/")
+        } catch(error) {
+            console.log(error)
+            setError("Failed to create an account")
+        }
+
+        setLoading(false)
+    }
+
     return (
       <>
         <Col lg="6" md="8">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
+            <CardHeader className="bg-transparent">
               <div className="text-muted text-center mt-2 mb-4">
-                <small>Sign up with</small>
-              </div>
-              <div className="text-center">
-                <Button
-                  className="btn-neutral btn-icon mr-4"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/github.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Github</span>
-                </Button>
-                <Button
-                  className="btn-neutral btn-icon"
-                  color="default"
-                  href="#pablo"
-                  onClick={e => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/google.svg")}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Google</span>
-                </Button>
+                <h2>S'inscrire</h2>
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              <div className="text-center text-muted mb-4">
-                <small>Or sign up with credentials</small>
-              </div>
-              <Form role="form">
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-hat-3" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Name" type="text" />
-                  </InputGroup>
-                </FormGroup>
+                {error && <div>{error}</div>}
+              <Form onSubmit={handleSubmit}>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
                     <InputGroupAddon addonType="prepend">
@@ -96,7 +85,7 @@ class Register extends React.Component {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" autoComplete="new-email"/>
+                    <Input placeholder="Email" ref={emailRef} type="email" autoComplete="new-email" required/>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -106,7 +95,17 @@ class Register extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" autoComplete="new-password"/>
+                    <Input placeholder="Password" ref={passwordRef} type="password" autoComplete="new-password" required/>
+                  </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                  <InputGroup className="input-group-alternative">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-lock-circle-open" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input placeholder="Confirm Password" ref={confirmPasswordRef} type="password" autoComplete="confirm-password" required/>
                   </InputGroup>
                 </FormGroup>
                 <div className="text-muted font-italic">
@@ -138,8 +137,8 @@ class Register extends React.Component {
                   </Col>
                 </Row>
                 <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button">
-                    Create account
+                  <Button className="mt-4" color="primary" type="submit" disabled={loading}>
+                    S'enregistrer
                   </Button>
                 </div>
               </Form>
@@ -148,7 +147,4 @@ class Register extends React.Component {
         </Col>
       </>
     );
-  }
 }
-
-export default Register;
