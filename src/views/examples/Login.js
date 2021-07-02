@@ -37,8 +37,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 
 function Login(props) {
-    const emailRef = useRef()
-    const passwordRef = useRef()
     const { login } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -48,12 +46,12 @@ function Login(props) {
         e.preventDefault()
 
         try {
-        setError("")
-        setLoading(true)
-        await login(emailRef.current.value, passwordRef.current.value)
-        history.push("/")
+          setError("")
+          setLoading(true)
+          await login(data.email, data.password)
+          history.push("/")
         } catch {
-        setError("Failed to log in")
+          setError("Failed to log in")
         }
 
         setLoading(false)
@@ -76,7 +74,7 @@ function Login(props) {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" ref={emailRef} autoComplete="new-email"/>
+                    <Input placeholder="Email" type="email" autoComplete="new-email"/>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -86,10 +84,10 @@ function Login(props) {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" ref={passwordRef} autoComplete="new-password"/>
+                    <Input placeholder="Password" type="password" autoComplete="new-password"/>
                   </InputGroup>
                 </FormGroup>
-                <div className="custom-control custom-control-alternative custom-checkbox">
+                {/*<div className="custom-control custom-control-alternative custom-checkbox">
                   <input
                     className="custom-control-input"
                     id=" customCheckLogin"
@@ -101,7 +99,7 @@ function Login(props) {
                   >
                     <span className="text-muted">Remember me</span>
                   </label>
-                </div>
+                </div>*/}
                 <div className="text-center">
                   <Button className="my-4" color="primary" type="button">
                     Sign in
