@@ -55,7 +55,6 @@ export default function Register() {
     });
 
     async function submit(data) {
-        console.log(data)
 
         if (data.password !== data.confirmPassword) {
             return setError("Passwords do not match")
@@ -93,7 +92,7 @@ export default function Register() {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" {...register("email")} type="email" autoComplete="new-email" required/>
+                    <Input placeholder="Email" {...register("email")} type="email" name="email" autoComplete="new-email" required/>
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.email?.message}</p>

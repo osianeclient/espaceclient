@@ -15,7 +15,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 // reactstrap components
 import {
@@ -35,16 +37,24 @@ import {
 
 import { useAuth } from "../../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(8).max(32).required(),
+});
 
 function Login(props) {
     const { login } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+      resolver: yupResolver(schema),
+    });
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-
+    async function submit(data) {
+        console.log("submitted")
         try {
           setError("")
           setLoading(true)
@@ -66,7 +76,7 @@ function Login(props) {
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              <Form role="form">
+              <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -74,9 +84,10 @@ function Login(props) {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" autoComplete="new-email"/>
+                    <Input {...register("email")} placeholder="Email" type="email" autoComplete="new-email"/>
                   </InputGroup>
                 </FormGroup>
+                <p>{errors.email?.message}</p>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -84,9 +95,10 @@ function Login(props) {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" autoComplete="new-password"/>
+                    <Input {...register("password")} placeholder="Password" type="password" autoComplete="new-password"/>
                   </InputGroup>
                 </FormGroup>
+                <p>{errors.email?.password}</p>
                 {/*<div className="custom-control custom-control-alternative custom-checkbox">
                   <input
                     className="custom-control-input"
@@ -101,8 +113,8 @@ function Login(props) {
                   </label>
                 </div>*/}
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button">
-                    Sign in
+                  <Button className="my-4" color="primary" type="submit" disabled={loading}>
+                    Connectez-vous
                   </Button>
                 </div>
               </Form>
@@ -115,17 +127,16 @@ function Login(props) {
                 href="#pablo"
                 onClick={e => e.preventDefault()}
               >
-                <small>Forgot password?</small>
+                <small>Mot de passe oublié?</small>
               </a>
             </Col>
             <Col className="text-right" xs="6">
-              <a
+              <Link
                 className="text-light"
-                href="#pablo"
-                onClick={e => e.preventDefault()}
+                to="/auth/register"
               >
-                <small>Create new account</small>
-              </a>
+                <small>Créer votre compte</small>
+              </Link>
             </Col>
           </Row>
         </Col>
