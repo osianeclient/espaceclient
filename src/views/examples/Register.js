@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -37,6 +37,7 @@ import {
 
 import { useAuth } from "../../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -45,27 +46,25 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-    const emailRef = useRef("")
-    const passwordRef = useRef("")
-    const confirmPasswordRef = useRef("")
     const { signup } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+      resolver: yupResolver(schema),
+    });
 
-    async function submit(e) {
-        e.preventDefault()
+    async function submit(data) {
+        console.log(data)
 
-        if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+        if (data.password !== data.confirmPassword) {
             return setError("Passwords do not match")
         }
 
         try {
             setError("")
             setLoading(true)
-            console.log(emailRef.current.value, emailRef.current.value)
-            await signup(emailRef.current.value, passwordRef.current.value)
+            await signup(data.email, data.password)
             history.push("/")
         } catch(error) {
             console.log(error)
@@ -86,7 +85,7 @@ export default function Register() {
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
                 {error && <div>{error}</div>}
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
                     <InputGroupAddon addonType="prepend">
@@ -94,9 +93,10 @@ export default function Register() {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" ref={emailRef} type="email" autoComplete="new-email" required/>
+                    <Input placeholder="Email" {...register("email")} type="email" autoComplete="new-email" required/>
                   </InputGroup>
                 </FormGroup>
+                <p>{errors.email?.message}</p>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -104,9 +104,10 @@ export default function Register() {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" ref={passwordRef} type="password" autoComplete="new-password" required/>
+                    <Input placeholder="Password" {...register("password")} type="password" name="password" autoComplete="new-password" required/>
                   </InputGroup>
                 </FormGroup>
+                <p>{errors.password?.message}</p>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -114,9 +115,10 @@ export default function Register() {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Confirm Password" ref={confirmPasswordRef} type="password" autoComplete="confirm-password" required/>
+                    <Input placeholder="Confirm Password" {...register("confirmPassword")} type="password" name="confirmPassword" autoComplete="confirm-password" required/>
                   </InputGroup>
                 </FormGroup>
+                <p>{errors.confirmPassword?.message}</p>
                 <div className="text-muted font-italic">
                   <small>
                     password strength:{" "}
