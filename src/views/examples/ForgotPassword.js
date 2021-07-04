@@ -59,7 +59,7 @@ function ForgotPassword(props) {
           setError("")
           setLoading(true)
           await resetPassword(data.email)
-          setMessage("Vérifiez votre mail pour retrouver votre mot de passe")
+          setMessage("Pour retrouver votre mot de passe un mail a été envoyé à " + data.email)
           setLoading(false)
         } catch {
           setError("Failed to send reset password")

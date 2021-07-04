@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState } from "react";
 
 // reactstrap components
 import {
@@ -33,10 +33,58 @@ import {
 // core components
 import UserHeader from "components/Headers/UserHeader.js";
 
-import { useAuth } from "../../contexts/AuthContext"
+import { useAuth } from "../../contexts/AuthContext";
+import { useHistory } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(8).max(32),
+  confirmPassword: yup.string().min(8).max(32)
+  .oneOf([yup.ref('password'), null], 'Les mots de passe ne sont pas identiques'),
+});
 
 function Profile () {
-  const { currentUser } = useAuth()
+  const { currentUser, updateEmail, updatePassword , verifyEmail } = useAuth();
+  const history = useHistory();
+  const [message, setMessage] = useState("")
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  async function submit(data) {      
+    const promises = []
+
+    if (data.email !== currentUser.email) {
+      promises.push(updateEmail(data.email))
+    }
+    if (data.password) {
+      promises.push(updatePassword(data.password))
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        alert("Modifié avec succès")
+      })
+      .catch((error) => {
+        console.log("Failed to update account")
+      })
+      //.finally(() => {
+      //  setLoading(false)
+      //})
+  }
+
+  async function verify(){
+    try {
+      setMessage("")
+      await verifyEmail()
+      setMessage("Un mail de confirmation a été envoyé à " + currentUser.email)
+    } catch(error) {
+      alert(error)
+    }
+  }
 
   console.log(currentUser)
     return (
@@ -133,25 +181,39 @@ function Profile () {
             </Col>*/}
             <Col className="order-xl-1" xl="4">
               <Card className="bg-secondary shadow border-0">
-                <CardHeader className="bg-white border-0">
-                  <Row className="align-items-center">
-                    <Col xs="8">
-                      <h3 className="mb-0">Mon Compte</h3>
-                    </Col>
-                    <Col className="text-right" xs="4">
-                      <Button
-                        color="primary"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                        size="sm"
-                      >
-                        Mettre à jour
-                      </Button>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <Form>
+                {
+                  (message && currentUser.emailVerified === false)
+                  &&
+                  <div className="text-center text-success">
+                    {message}
+                  </div>
+                }
+                {
+                  currentUser.emailVerified === false 
+                  && 
+                  <div className="text-center mt-4 mb-4">
+                    Votre compte email n'est pas vérifié veuillez le <Button color="success" size="sm" onClick={verify}>Verifier</Button> pour ne pas le perdre
+                  </div>
+                }
+                <Form onSubmit={handleSubmit(submit)} noValidate>
+                  <CardHeader className="bg-white border-0">
+                    <Row className="align-items-center">
+                      <Col xs="8">
+                        <h3 className="mb-0">Mon Compte</h3>
+                      </Col>
+                      <Col className="text-right" xs="4">
+                        <Button
+                          color="primary"
+                          type="submit"
+                          size="sm"
+                        >
+                          Mettre à jour
+                        </Button>
+                      </Col>
+                    </Row>
+                  </CardHeader>
+                  <CardBody>
+                  
                     <h6 className="heading-small text-muted mb-4">
                       Information de l'utilisateur
                     </h6>
@@ -172,7 +234,9 @@ function Profile () {
                               placeholder="email@example.com"
                               type="email"
                               required
+                              {...register("email")}
                             />
+                            <p>{errors.email?.message}</p>
                           </FormGroup>
                         </Col>
                       </Row>
@@ -181,15 +245,18 @@ function Profile () {
                           <FormGroup>
                             <label
                               className="form-control-label"
-                              htmlFor="input-first-name"
+                              htmlFor="input-password"
                             >
                               Nouveau Mot de passe
                             </label>
                             <Input
                               className="form-control-alternative"
-                              id="input-first-name"
+                              id="input-password"
                               type="password"
+                              {...register("password")}
+                              placeholder="Laissez vide pour garder votre mot de passe actuelle"
                             />
+                            <p>{errors.password?.message}</p>
                           </FormGroup>
                         </Col>
                       </Row>
@@ -198,15 +265,18 @@ function Profile () {
                           <FormGroup>
                             <label
                               className="form-control-label"
-                              htmlFor="input-last-name"
+                              htmlFor="input-confirmPassword"
                             >
                               Confirmez Nouveau Mot de passe
                             </label>
                             <Input
                               className="form-control-alternative"
-                              id="input-last-name"
+                              id="input-confirmPassword"
                               type="password"
+                              {...register("confirmPassword")}
+                              placeholder="Laissez vide pour garder votre mot de passe actuelle"
                             />
+                            <p>{errors.confirmPassword?.message}</p>
                           </FormGroup>
                         </Col>
                       </Row>
@@ -305,8 +375,9 @@ function Profile () {
                         />
                       </FormGroup>
                     </div>*/}
-                  </Form>
+                  
                 </CardBody>
+                </Form>
               </Card>
             </Col>
           </Row>

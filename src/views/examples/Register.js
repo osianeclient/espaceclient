@@ -46,9 +46,8 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-    const { signup, verifyEmail } = useAuth()
+    const { signup, currentUser } = useAuth()
     const [error, setError] = useState("")
-    const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -65,15 +64,13 @@ export default function Register() {
             setError("")
             setLoading(true)
             await signup(data.email, data.password)
-            await verifyEmail()
-            setMessage("Un mail avec un lien vous a été envoyé pour verifier votre compte")
+            console.log(currentUser)
+            history.push("/admin/user-profile")
         } catch(error) {
             console.log(error)
             setError("Failed to create an account")
             setLoading(false)
         }
-
-        
     }
 
     return (
@@ -87,7 +84,6 @@ export default function Register() {
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
                 {error && <div>{error}</div>}
-                {message && <div>{message}</div>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
