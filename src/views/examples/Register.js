@@ -46,8 +46,9 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-    const { signup } = useAuth()
+    const { signup, verifyEmail } = useAuth()
     const [error, setError] = useState("")
+    const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -64,13 +65,15 @@ export default function Register() {
             setError("")
             setLoading(true)
             await signup(data.email, data.password)
-            history.push("/")
+            await verifyEmail()
+            setMessage("Un mail avec un lien vous a été envoyé pour verifier votre compte")
         } catch(error) {
             console.log(error)
             setError("Failed to create an account")
+            setLoading(false)
         }
 
-        setLoading(false)
+        
     }
 
     return (
@@ -84,6 +87,7 @@ export default function Register() {
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
                 {error && <div>{error}</div>}
+                {message && <div>{message}</div>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
@@ -103,7 +107,7 @@ export default function Register() {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" {...register("password")} type="password" name="password" autoComplete="new-password" required/>
+                    <Input placeholder="Mot de passe" {...register("password")} type="password" name="password" autoComplete="new-password" required/>
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.password?.message}</p>
@@ -114,11 +118,11 @@ export default function Register() {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Confirm Password" {...register("confirmPassword")} type="password" name="confirmPassword" autoComplete="confirm-password" required/>
+                    <Input placeholder="Confirmez mot de passe" {...register("confirmPassword")} type="password" name="confirmPassword" autoComplete="confirm-password" required/>
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.confirmPassword?.message}</p>
-                <div className="text-muted font-italic">
+                {/*<div className="text-muted font-italic">
                   <small>
                     password strength:{" "}
                     <span className="text-success font-weight-700">strong</span>
@@ -145,7 +149,7 @@ export default function Register() {
                       </label>
                     </div>
                   </Col>
-                </Row>
+                </Row>*/}
                 <div className="text-center">
                   <Button className="mt-4" color="primary" type="submit" disabled={loading}>
                     S'enregistrer
@@ -154,6 +158,16 @@ export default function Register() {
               </Form>
             </CardBody>
           </Card>
+          <Row className="mt-3">
+            <Col xs="6">
+              <Link
+                className="text-light"
+                to="/auth/login"
+              >
+                <small>Se connecter</small>
+              </Link>
+            </Col>
+          </Row>
         </Col>
       </>
     );

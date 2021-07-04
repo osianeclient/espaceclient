@@ -15,8 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 // reactstrap components
 import {
   DropdownMenu,
@@ -35,8 +35,24 @@ import {
   Media
 } from "reactstrap";
 
-class AdminNavbar extends React.Component {
-  render() {
+import { useAuth } from "../../contexts/AuthContext"
+
+function AdminNavbar () {
+  const [error, setError] = useState("")
+  const { logout } = useAuth()
+  const { history } = useHistory()
+
+  async function handleLogout() {
+    setError("")
+
+    try {
+      await logout()
+      history.push("/auth/login")
+    } catch(error) {
+      setError(error)
+    }
+  }
+
     return (
       <>
         <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -45,9 +61,9 @@ class AdminNavbar extends React.Component {
               className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
               to="/"
             >
-              {this.props.brandText}
+              {/*this.props.brandText*/}
             </Link>
-            <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+            {/*<Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
               <FormGroup className="mb-0">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -58,9 +74,14 @@ class AdminNavbar extends React.Component {
                   <Input placeholder="Search" type="text" />
                 </InputGroup>
               </FormGroup>
-            </Form>
+            </Form>*/}
             <Nav className="align-items-center d-none d-md-flex" navbar>
-              <UncontrolledDropdown nav>
+              <Media className="ml-2 d-none d-lg-block">
+                <span className="mb-0 text-sm font-weight-bold">
+                  <Link onClick={handleLogout}>Se déconnecter</Link>
+                </span>
+              </Media>
+              {/*<UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     <span className="avatar avatar-sm rounded-circle">
@@ -102,13 +123,13 @@ class AdminNavbar extends React.Component {
                     <span>Logout</span>
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </UncontrolledDropdown>*/}
             </Nav>
+            {error && <p>{error}</p>}
           </Container>
         </Navbar>
       </>
     );
-  }
 }
 
 export default AdminNavbar;

@@ -33,8 +33,12 @@ import {
 // core components
 import UserHeader from "components/Headers/UserHeader.js";
 
-class Profile extends React.Component {
-  render() {
+import { useAuth } from "../../contexts/AuthContext"
+
+function Profile () {
+  const { currentUser } = useAuth()
+
+  console.log(currentUser)
     return (
       <>
         <UserHeader />
@@ -326,7 +330,6 @@ class Profile extends React.Component {
         </Container>
       </>
     );
-  }
 }
 
 export default Profile;

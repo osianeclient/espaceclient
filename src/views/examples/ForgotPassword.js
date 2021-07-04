@@ -36,19 +36,18 @@ import {
 } from "reactstrap";
 
 import { useAuth } from "../../contexts/AuthContext"
-import { Link, useHistory } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(32).required(),
+  email: yup.string().email().required()
 });
 
-function Login(props) {
-    const { login } = useAuth()
+function ForgotPassword(props) {
+    const { resetPassword } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    const history = useHistory()
+    const [message, setMessage] = useState("")
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
       resolver: yupResolver(schema),
     });
@@ -56,13 +55,15 @@ function Login(props) {
     async function submit(data) {
         
         try {
-          //setError("")
-          //setLoading(true)
-          await login(data.email, data.password)
-          history.push("/admin/user-profile")
+          setMessage("")
+          setError("")
+          setLoading(true)
+          await resetPassword(data.email)
+          setMessage("Vérifiez votre mail pour retrouver votre mot de passe")
+          setLoading(false)
         } catch {
-          //setError("Failed to log in")
-          //setLoading(false)
+          setError("Failed to send reset password")
+          setLoading(false)
         }
     }
 
@@ -71,11 +72,12 @@ function Login(props) {
           <Card className="bg-secondary shadow border-0">
             <CardHeader className="bg-transparent">
               <div className="text-muted text-center mt-2 mb-3">
-                <h2>Se Connecter</h2>
+                <h2>Mot de passe oublié ?</h2>
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
               {error && <p>{error}</p>}
+              {message && <p>{message}</p>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
@@ -88,33 +90,9 @@ function Login(props) {
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.email?.message}</p>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-lock-circle-open" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input {...register("password")} placeholder="Mot de passe" type="password" autoComplete="new-password"/>
-                  </InputGroup>
-                </FormGroup>
-                <p>{errors.password?.message}</p>
-                {/*<div className="custom-control custom-control-alternative custom-checkbox">
-                  <input
-                    className="custom-control-input"
-                    id=" customCheckLogin"
-                    type="checkbox"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor=" customCheckLogin"
-                  >
-                    <span className="text-muted">Remember me</span>
-                  </label>
-                </div>*/}
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="submit" >
-                    Connectez-vous
+                  <Button className="my-4" color="primary" type="submit" disabled={loading}>
+                    Validez
                   </Button>
                 </div>
               </Form>
@@ -124,9 +102,9 @@ function Login(props) {
             <Col xs="6">
               <Link
                 className="text-light"
-                to="/auth/forgot-password"
+                to="/auth/login"
               >
-                <small>Mot de passe oublié ?</small>
+                <small>Se connecter</small>
               </Link>
             </Col>
             <Col className="text-right" xs="6">
@@ -142,4 +120,4 @@ function Login(props) {
       </>
 }
 
-export default Login;
+export default ForgotPassword;

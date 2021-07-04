@@ -10,9 +10,9 @@ function App () {
         <Router>
             <AuthProvider>
                 <Switch>
-                    <PrivateRoute exact path="/admin" render={props => <AdminLayout {...props} />} />
+                    <PrivateRoute path="/admin" component={AdminLayout} />
                     <Route path="/auth" render={props => <AuthLayout {...props} />} />
-                    <Redirect from="/" to="/admin" />
+                    <Redirect from="/" to="/auth" />
                 </Switch>
             </AuthProvider>
         </Router>

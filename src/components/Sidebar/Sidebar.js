@@ -163,7 +163,7 @@ class Sidebar extends React.Component {
                   </span>
                 </Media>
               </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-arrow" right>
+              {/*<DropdownMenu className="dropdown-menu-arrow" right>
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>
                 </DropdownItem>
@@ -188,7 +188,7 @@ class Sidebar extends React.Component {
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>
-              </DropdownMenu>
+              </DropdownMenu>*/}
             </UncontrolledDropdown>
           </Nav>
           {/* Collapse */}
@@ -221,7 +221,7 @@ class Sidebar extends React.Component {
                 </Col>
               </Row>
             </div>
-            {/* Form */}
+            {/* Form 
             <Form className="mt-4 mb-3 d-md-none">
               <InputGroup className="input-group-rounded input-group-merge">
                 <Input
@@ -236,7 +236,7 @@ class Sidebar extends React.Component {
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-            </Form>
+            </Form>*/}
             {/* Navigation */}
             <Nav navbar>{this.createLinks(routes)}</Nav>
             {/* Divider */}
