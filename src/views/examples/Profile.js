@@ -44,8 +44,8 @@ function Profile () {
         <UserHeader />
         {/* Page content */}
         <Container className="mt--7" fluid>
-          <Row>
-            <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
+          <Row className="justify-content-center">
+            {/*<Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
               <Card className="card-profile shadow">
                 <Row className="justify-content-center">
                   <Col className="order-lg-2" lg="3">
@@ -130,13 +130,13 @@ function Profile () {
                   </div>
                 </CardBody>
               </Card>
-            </Col>
-            <Col className="order-xl-1" xl="8">
-              <Card className="bg-secondary shadow">
+            </Col>*/}
+            <Col className="order-xl-1" xl="4">
+              <Card className="bg-secondary shadow border-0">
                 <CardHeader className="bg-white border-0">
                   <Row className="align-items-center">
                     <Col xs="8">
-                      <h3 className="mb-0">My account</h3>
+                      <h3 className="mb-0">Mon Compte</h3>
                     </Col>
                     <Col className="text-right" xs="4">
                       <Button
@@ -145,7 +145,7 @@ function Profile () {
                         onClick={e => e.preventDefault()}
                         size="sm"
                       >
-                        Settings
+                        Mettre à jour
                       </Button>
                     </Col>
                   </Row>
@@ -153,28 +153,11 @@ function Profile () {
                 <CardBody>
                   <Form>
                     <h6 className="heading-small text-muted mb-4">
-                      User information
+                      Information de l'utilisateur
                     </h6>
                     <div className="pl-lg-4">
                       <Row>
-                        <Col lg="6">
-                          <FormGroup>
-                            <label
-                              className="form-control-label"
-                              htmlFor="input-username"
-                            >
-                              Username
-                            </label>
-                            <Input
-                              className="form-control-alternative"
-                              defaultValue="lucky.jesse"
-                              id="input-username"
-                              placeholder="Username"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col lg="6">
+                        <Col>
                           <FormGroup>
                             <label
                               className="form-control-label"
@@ -184,52 +167,52 @@ function Profile () {
                             </label>
                             <Input
                               className="form-control-alternative"
+                              defaultValue={currentUser.email}
                               id="input-email"
-                              placeholder="jesse@example.com"
+                              placeholder="email@example.com"
                               type="email"
+                              required
                             />
                           </FormGroup>
                         </Col>
                       </Row>
                       <Row>
-                        <Col lg="6">
+                        <Col>
                           <FormGroup>
                             <label
                               className="form-control-label"
                               htmlFor="input-first-name"
                             >
-                              First name
+                              Nouveau Mot de passe
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue="Lucky"
                               id="input-first-name"
-                              placeholder="First name"
-                              type="text"
+                              type="password"
                             />
                           </FormGroup>
                         </Col>
-                        <Col lg="6">
+                      </Row>
+                      <Row>
+                        <Col>
                           <FormGroup>
                             <label
                               className="form-control-label"
                               htmlFor="input-last-name"
                             >
-                              Last name
+                              Confirmez Nouveau Mot de passe
                             </label>
                             <Input
                               className="form-control-alternative"
-                              defaultValue="Jesse"
                               id="input-last-name"
-                              placeholder="Last name"
-                              type="text"
+                              type="password"
                             />
                           </FormGroup>
                         </Col>
                       </Row>
                     </div>
-                    <hr className="my-4" />
-                    {/* Address */}
+                    {/*<hr className="my-4" />
+                     Address 
                     <h6 className="heading-small text-muted mb-4">
                       Contact information
                     </h6>
@@ -306,8 +289,8 @@ function Profile () {
                         </Col>
                       </Row>
                     </div>
-                    <hr className="my-4" />
-                    {/* Description */}
+                    <hr className="my-4" />*/}
+                    {/* Description 
                     <h6 className="heading-small text-muted mb-4">About me</h6>
                     <div className="pl-lg-4">
                       <FormGroup>
@@ -321,7 +304,7 @@ function Profile () {
                           type="textarea"
                         />
                       </FormGroup>
-                    </div>
+                    </div>*/}
                   </Form>
                 </CardBody>
               </Card>

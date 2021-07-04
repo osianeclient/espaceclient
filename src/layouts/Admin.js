@@ -62,7 +62,7 @@ class Admin extends React.Component {
   render() {
     return (
       <>
-        <Sidebar
+        {/*<Sidebar
           {...this.props}
           routes={routes}
           logo={{
@@ -70,12 +70,12 @@ class Admin extends React.Component {
             imgSrc: require("assets/img/brand/argon-react.png"),
             imgAlt: "..."
           }}
-        />
+        />*/}
         <div className="main-content" ref="mainContent">
-          {/*<AdminNavbar
+          <AdminNavbar
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
-          />*/}
+          />
           <Switch>
             {this.getRoutes(routes)}
             <Redirect from="*" to="/admin/index" />
