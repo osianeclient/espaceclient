@@ -46,7 +46,7 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-    const { signup, currentUser } = useAuth()
+    const { signup, login, currentUser } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
@@ -65,6 +65,7 @@ export default function Register() {
             setLoading(true)
             await signup(data.email, data.password)
             console.log(currentUser)
+            await login(data.email, data.password)
             history.push("/admin/user-profile")
         } catch(error) {
             console.log(error)

@@ -22,7 +22,6 @@
   "bugs": {
     "url": "https://github.com/creativetimofficial/argon-dashboard-react/issues"
   },
-  "homepage": "https://demos.creative-tim.com/argon-dashboard-react/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -43,11 +42,15 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@apollo/client": "^3.3.21",
+    "@apollo/link-context": "^2.0.0-beta.3",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@hookform/resolvers": "^2.6.0",
     "chart.js": "2.9.3",
     "classnames": "2.2.6",
     "firebase": "^8.6.8",
+    "graphql": "^15.5.1",
+    "graphql-request": "^3.4.0",
     "moment": "2.24.0",
     "node-sass": "4.13.1",
     "nouislider": "14.1.1",
