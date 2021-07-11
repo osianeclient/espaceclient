@@ -10,18 +10,46 @@ const request = require("graphql-request");
 //   response.send("Hello from Firebase!");
 // });
 
+// Make sure you update the endpoint and the secret
+// You can find both these values on the Graphiql tab in Hasura
+const client = new request.GraphQLClient("https://safe-tiger-57.hasura.app/v1/graphql", {
+  headers: {
+    "content-type": "application/json",
+    "x-hasura-admin-secret": "XdMLZrRM3EEKZycojjSLD65PwHhG49t3ESlQ1Ak9U57cMXVKTCb83HlqLBNI9E0i"
+  }
+});
+
 admin.initializeApp(functions.config().firebase);
 
 exports.registerUser = functions.https.onCall(async (data) => {
-  const { email, password } = data;
-
-  if (email === null || password === null) {
-    // We are throwing an error if either the email or the password is missing
-    // We should also ideally validate these on the frontend so the request is never made if those fields are missing
-    throw new functions.https.HttpsError("invalid-argument", "email and password are required fields");
-  }
+  const { email, password, ville, numClient } = data;
+  const query = `
+    query($numClient: String_comparison_exp = {}, $_eq: String = "", $centre: String_comparison_exp = {}) {
+      V1_clients(where: {centre: $centre, numClient: $numClient}){
+        id
+        centre
+        numClient
+      }
+    }
+  `;
 
   try {
+    const data = await client.request(query, {"centre": {"_eq": "BZV"},"numClient": {"_eq": "0000107A"}});
+
+    return data;
+  } catch (e) {
+    throw new functions.https.HttpsError('invalid-argument', e.message);
+  }
+
+  if(email === null){
+    throw new functions.https.HttpsError("invalid-argument", "Votre email addresse est requise");
+  } 
+
+  if(password === null){
+    throw new functions.https.HttpsError("invalid-argument", "Le mot de passe est requis");
+  }
+
+  /*try {
     // We create our user using the firebase admin sdk
     const userRecord = await admin.auth().createUser({ email, password });
 
@@ -49,16 +77,7 @@ exports.registerUser = functions.https.onCall(async (data) => {
       msg = e.message;
     }
     throw new functions.https.HttpsError(errorCode, msg, JSON.stringify(e) );
-  }
-});
-
-// Make sure you update the endpoint and the secret
-// You can find both these values on the Graphiql tab in Hasura
-const client = new request.GraphQLClient("https://safe-tiger-57.hasura.app/v1/graphql", {
-  headers: {
-    "content-type": "application/json",
-    "x-hasura-admin-secret": "XdMLZrRM3EEKZycojjSLD65PwHhG49t3ESlQ1Ak9U57cMXVKTCb83HlqLBNI9E0i"
-  }
+  }*/
 });
 
 // This is automatically triggered by Firebase

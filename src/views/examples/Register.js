@@ -40,9 +40,13 @@ import { Link, useHistory } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(32).required(),
-  confirmPassword: yup.string().min(8).max(32).required()
+  email: yup.string("Format invalide").email("Le format de l'addresse email n'est pas valide").required("Une email addresse valide est requise"),
+  ville: yup.string("Format invalide").required("La ville associée a votre numéro client est requise"),
+  numClient: yup.string("Format invalide").required("Votre numéro client est requis"),
+  password: yup.string("Format invalide").min(8, "le mot de passe doit avoir au moins 8 charactère").max(32, "Mot de passe trop long").required("Mot de passe requis"),
+  confirmPassword: yup.string().test('mot de passe identique', 'Le mot de passe doit etre identique', function(value){
+    return this.parent.password === value
+  })
 });
 
 export default function Register() {
@@ -50,28 +54,25 @@ export default function Register() {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }} = useForm({
       resolver: yupResolver(schema),
     });
 
     async function submit(data) {
-
-        if (data.password !== data.confirmPassword) {
-            return setError("Passwords do not match")
-        }
-
         try {
             setError("")
             setLoading(true)
             await signup(data.email, data.password)
-            console.log(currentUser)
-            await login(data.email, data.password)
-            history.push("/admin/user-profile")
+            //console.log(currentUser)
+            //await login(data.email, data.password)
+            //history.push("/admin/user-profile")
         } catch(error) {
             console.log(error)
-            setError("Failed to create an account")
+            setError(error.message)
             setLoading(false)
         }
+
+        setLoading(false)
     }
 
     return (
@@ -84,7 +85,7 @@ export default function Register() {
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-                {error && <div>{error}</div>}
+                {error && <div className="text-center pb-2">{error}</div>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
@@ -93,10 +94,38 @@ export default function Register() {
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" {...register("email")} type="email" name="email" autoComplete="new-email" required/>
+                    <Input placeholder="Veuillez saisir une addresse email que vous utilisez" {...register("email")} type="email" name="email" autoComplete="new-email" required/>
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.email?.message}</p>
+                <FormGroup>
+                  <InputGroup className="input-group-alternative mb-3">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-email-83" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input placeholder="Veuillez saisir votre numéro client" {...register("numClient")} type="text" name="numClient" autoComplete="new-numClient" required/>
+                  </InputGroup>
+                </FormGroup>
+                <p>{errors.numClient?.message}</p>
+                <FormGroup>
+                  <InputGroup className="input-group-alternative mb-3">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-email-83" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input placeholder="ville" {...register("ville")} type="select" name="ville" autoComplete="new-ville" required>
+                      <option value="" key="0">Veuillez sélectionner une ville</option>
+                      <option value="BZV" key="1">BZV</option>
+                      <option value="PNR" key="2">PNR</option>
+                      <option value="DOL" key="3">DOL</option>
+                      <option value="OYO" key="4">OYO</option>
+                    </Input>
+                  </InputGroup>
+                </FormGroup>
+                <p>{errors.ville?.message}</p>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -104,7 +133,7 @@ export default function Register() {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Mot de passe" {...register("password")} type="password" name="password" autoComplete="new-password" required/>
+                    <Input placeholder="Saisissez un mot de passe pour l'espace client" {...register("password")} type="password" name="password" autoComplete="new-password" required/>
                   </InputGroup>
                 </FormGroup>
                 <p>{errors.password?.message}</p>

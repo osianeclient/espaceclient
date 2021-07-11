@@ -78,7 +78,7 @@ function AdminNavbar () {
             <Nav className="align-items-center d-none d-md-flex" navbar>
               <Media className="ml-2 d-none d-lg-block">
                 <span className="mb-0 text-sm font-weight-bold">
-                  <Link onClick={handleLogout}>Se déconnecter</Link>
+                  <Link onClick={handleLogout} color="white">Se déconnecter</Link>
                 </span>
               </Media>
               {/*<UncontrolledDropdown nav>

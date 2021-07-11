@@ -81,7 +81,7 @@ class Sidebar extends React.Component {
   // creates the links that appear in the left menu / Sidebar
   createLinks = routes => {
     return routes.map((prop, key) => {
-      return (
+      if (prop.layout === "/admin") return (
         <NavItem key={key}>
           <NavLink
             to={prop.layout + prop.path}
@@ -239,11 +239,11 @@ class Sidebar extends React.Component {
             </Form>*/}
             {/* Navigation */}
             <Nav navbar>{this.createLinks(routes)}</Nav>
-            {/* Divider */}
+            {/* Divider 
             <hr className="my-3" />
-            {/* Heading */}
+            {/* Heading 
             <h6 className="navbar-heading text-muted">Documentation</h6>
-            {/* Navigation */}
+            {/* Navigation 
             <Nav className="mb-md-3" navbar>
               <NavItem>
                 <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
@@ -271,7 +271,7 @@ class Sidebar extends React.Component {
                   Upgrade to PRO
                 </NavLink>
               </NavItem>
-            </Nav>
+            </Nav>*/}
           </Collapse>
         </Container>
       </Navbar>

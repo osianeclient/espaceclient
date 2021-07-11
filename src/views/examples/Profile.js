@@ -179,7 +179,7 @@ function Profile () {
                 </CardBody>
               </Card>
             </Col>*/}
-            <Col className="order-xl-1" xl="4">
+            <Col className="order-xl-1" xl="6">
               <Card className="bg-secondary shadow border-0">
                 {
                   (message && currentUser.emailVerified === false)

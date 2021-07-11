@@ -17,47 +17,42 @@
 */
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
-import Maps from "views/examples/Maps.js";
+//import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import ForgotPassword from "views/examples/ForgotPassword.js"
-import Tables from "views/examples/Tables.js";
-import Icons from "views/examples/Icons.js";
+//import Tables from "views/examples/Tables.js";
+//import Icons from "views/examples/Icons.js";
+import Contrats from "views/examples/Contrats.js"
+import AddContrat from "views/examples/AddContrat.js"
 
 var routes = [
   {
+    path: "/contrats",
+    name: "Contrats",
+    icon: "ni ni-tv-2 text-primary",
+    component: Contrats,
+    layout: "/admin"
+  },
+  {
+    path: "/contrat/add",
+    name: "Ajouter un contrat",
+    icon: "ni ni-tv-2 text-primary",
+    component: AddContrat,
+    layout: "/admin"
+  },
+  /*{
     path: "/index",
-    name: "Dashboard",
+    name: "Factures",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
     layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "ni ni-pin-3 text-orange",
-    component: Maps,
-    layout: "/admin"
-  },
+  },*/
   {
     path: "/user-profile",
     name: "User Profile",
     icon: "ni ni-single-02 text-yellow",
     component: Profile,
-    layout: "/admin"
-  },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    component: Tables,
     layout: "/admin"
   },
   {
@@ -84,3 +79,27 @@ var routes = [
 
 ];
 export default routes;
+
+/*{
+  path: "/icons",
+  name: "Icons",
+  icon: "ni ni-planet text-blue",
+  component: Icons,
+  layout: "/admin"
+},
+{
+  path: "/maps",
+  name: "Maps",
+  icon: "ni ni-pin-3 text-orange",
+  component: Maps,
+  layout: "/admin"
+}, 
+{
+    path: "/tables",
+    name: "Tables",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Tables,
+    layout: "/admin"
+  },
+
+*/
