@@ -9,6 +9,14 @@ export const GET_CONTRATS = gql`
   }
 `;
 
+export const GET_USER = gql`
+  query MyQuery($id: uuid = "") {
+    V1_clients_by_pk(id: $id) {
+      numClient
+    }
+  }
+`
+
 // We pass the user id and the name in order to update it
 export const ADD_USER = gql`
   mutation($centre: String = "", $email: String = "", $id: String = "", $numClient: String = "", $numTelephone: String = "") {
