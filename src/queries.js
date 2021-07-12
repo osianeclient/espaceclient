@@ -10,10 +10,13 @@ export const GET_CONTRATS = gql`
 `;
 
 // We pass the user id and the name in order to update it
-export const UPDATE_CONTRAT = gql`
-  mutation($id: String!, $name: String!) {
-    update_users_by_pk(pk_columns: {id: $id}, _set: {name: $name}) {
-      name
+export const ADD_USER = gql`
+  mutation($centre: String = "", $email: String = "", $id: String = "", $numClient: String = "", $numTelephone: String = "") {
+    insert_V1_users(objects: {centre: $centre, email: $email, id: $id, numClient: $numClient, numTelephone: $numTelephone}){
+      returning {
+        id
+        numClient
+      }
     }
   }
 `;

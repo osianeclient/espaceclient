@@ -34,9 +34,13 @@ exports.registerUser = functions.https.onCall(async (data) => {
   `;
 
   try {
-    const data = await client.request(query, {"centre": {"_eq": "BZV"},"numClient": {"_eq": "0000107A"}});
+    const data = await client.request(query, {"centre": {"_eq": ville},
+      "numClient": {"_eq": numClient}
+    });
 
-    return data;
+    if(data.V1_clients.length === 0){
+      throw new functions.https.HttpsError('not-found', "La combinaison de votre ville et votre numéro client n'est pas repertorié, veuillez réessayer avec des informations correctes ou vous rapprocher d'une agence")
+    }
   } catch (e) {
     throw new functions.https.HttpsError('invalid-argument', e.message);
   }
@@ -49,7 +53,7 @@ exports.registerUser = functions.https.onCall(async (data) => {
     throw new functions.https.HttpsError("invalid-argument", "Le mot de passe est requis");
   }
 
-  /*try {
+  try {
     // We create our user using the firebase admin sdk
     const userRecord = await admin.auth().createUser({ email, password });
 
@@ -58,8 +62,8 @@ exports.registerUser = functions.https.onCall(async (data) => {
     // if the user is allow to read/update a record
     const customClaims = {
       "https://hasura.io/jwt/claims": {
-        "x-hasura-default-role": "user",
-        "x-hasura-allowed-roles": ["user"],
+        "x-hasura-default-role": "anonymous",
+        "x-hasura-allowed-roles": ["anonymous"],
         "x-hasura-user-id": userRecord.uid
       }
     };
@@ -74,10 +78,10 @@ exports.registerUser = functions.https.onCall(async (data) => {
       // If a user that already has an account tries to sign up
       // we want to show them a proper error and instruct them to log in
       errorCode = "already-exists";
-      msg = e.message;
+      msg = "L'addresse " + email + " est déjà associée à un utilisateur";
     }
-    throw new functions.https.HttpsError(errorCode, msg, JSON.stringify(e) );
-  }*/
+    throw new functions.https.HttpsError(errorCode, msg);
+  }
 });
 
 // This is automatically triggered by Firebase
@@ -94,14 +98,17 @@ exports.processSignUp = functions.auth.user().onCreate(async user => {
       }
     }
   `;
+
+  const doc = await admin.firestore().collection("users").doc(id).get()
+  console.log(doc)
   
-  try {
+  /*try {
     const data = await client.request(mutation, { id, email });
 
     return data;
   } catch (e) {
     throw new functions.https.HttpsError('invalid-argument', e.message);
-  }
+  }*/
 });
 
 // This again is automatically triggered

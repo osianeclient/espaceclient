@@ -8,12 +8,12 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState()
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('authUser')))
   const [loading, setLoading] = useState(false)
 
-  function signup(email, password) {
+  function signup(email, password, ville, numClient) {
     const registerUser = fns.httpsCallable('registerUser');
-    return registerUser({email, password})
+    return registerUser({email, password, ville, numClient})
   }
 
   function verifyEmail(){
@@ -42,8 +42,14 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user)
+    const unsubscribe = auth.onAuthStateChanged(authUser => {
+      if(authUser) {
+        localStorage.setItem("authUser", JSON.stringify(authUser))
+        setCurrentUser(authUser)
+      } else {
+        localStorage.removeItem("authUser")
+        setCurrentUser(null)
+      }
       console.log(currentUser)
       setLoading(false)
     })

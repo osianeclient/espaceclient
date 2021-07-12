@@ -41,13 +41,13 @@ var routes = [
     component: AddContrat,
     layout: "/admin"
   },
-  /*{
+  {
     path: "/index",
-    name: "Factures",
+    name: "Tableau de bord",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
     layout: "/admin"
-  },*/
+  },
   {
     path: "/user-profile",
     name: "User Profile",

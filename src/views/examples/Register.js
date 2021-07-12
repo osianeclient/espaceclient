@@ -32,12 +32,17 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 
 import { useAuth } from "../../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup";
+
+import { useMutation } from '@apollo/client';
+
+import { ADD_USER } from "queries";
 
 const schema = yup.object().shape({
   email: yup.string("Format invalide").email("Le format de l'addresse email n'est pas valide").required("Une email addresse valide est requise"),
@@ -57,15 +62,26 @@ export default function Register() {
     const { register, handleSubmit, formState: { errors }} = useForm({
       resolver: yupResolver(schema),
     });
+    const [addUser] = useMutation(ADD_USER);
 
     async function submit(data) {
         try {
             setError("")
             setLoading(true)
-            await signup(data.email, data.password)
-            //console.log(currentUser)
-            //await login(data.email, data.password)
-            //history.push("/admin/user-profile")
+            const newUser = await signup(data.email, data.password, data.ville, data.numClient)
+            await login(data.email, data.password)
+            if(currentUser) {
+              await addUser({ 
+                variables: {
+                  id: currentUser.uid,
+                  email: data.email,
+                  centre: data.ville,
+                  numClient: data.numClient
+                } 
+              })
+            }
+            
+            history.push("/admin/index")
         } catch(error) {
             console.log(error)
             setError(error.message)
@@ -85,7 +101,7 @@ export default function Register() {
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-                {error && <div className="text-center pb-2">{error}</div>}
+                {error && <Alert className="text-center pb-2" color="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">

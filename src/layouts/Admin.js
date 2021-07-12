@@ -17,8 +17,7 @@
 */
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { ApolloProvider } from '@apollo/client';
-import { apolloClient } from '../apollo';
+
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
@@ -79,10 +78,8 @@ class Admin extends React.Component {
             brandText={this.getBrandText(this.props.location.pathname)}
           />
           <Switch>
-            <ApolloProvider client={apolloClient}>
               {this.getRoutes(routes)}
-              <Redirect from="*" to="/admin/contrats" />
-            </ApolloProvider>
+              <Redirect from="*" to="/admin/index" />
           </Switch>
           <Container fluid>
             <AdminFooter />

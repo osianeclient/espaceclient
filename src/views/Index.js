@@ -38,6 +38,8 @@ import {
   Col
 } from "reactstrap";
 
+import { useQuery } from '@apollo/client';
+
 // core components
 import {
   chartOptions,
