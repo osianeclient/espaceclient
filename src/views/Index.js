@@ -56,18 +56,10 @@ function Index() {
     const [activeNav, setActiveNav] = useState()
     const [chartExample1Data, setChartExample1Data] = useState()
     
-      if (window.Chart) {
-        parseOptions(Chart, chartOptions());
-      }
-      
-    const toggleNavs = (e, index) => {
-      e.preventDefault();
-      this.setState({
-        activeNav: index,
-        chartExample1Data:
-          this.state.chartExample1Data === "data1" ? "data2" : "data1"
-      });
-    };
+    if (window.Chart) {
+      parseOptions(Chart, chartOptions());
+    }
+
     return (
       <>
         <Header />
