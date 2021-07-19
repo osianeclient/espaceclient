@@ -15,18 +15,63 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // reactstrap components
-import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import { DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
-class Header extends React.Component {
-  render() {
+import { useQuery } from '@apollo/client';
+import { GET_CLIENTS } from "queries.js";
+
+export default function Header({sendAbonnement, facturation, impayees, reglements}){
+  const numClient = JSON.parse(window.localStorage.getItem('authUser')).uid;
+  const clients = useQuery(GET_CLIENTS, {variables: {"numclient": {"_eq": numClient}}})
+  console.log(clients.data.test_clients)
+  const [abonnementFilter, setAbonnementFilter] = useState(clients.data.test_clients[0].numbranchement)
+
+  console.log(facturation)
+
+  sendAbonnement(abonnementFilter)
+
+  function selectAbonnement(e, filter) {
+    e.preventDefault()
+    sendAbonnement(filter)
+    setAbonnementFilter(filter)
+  }
+
+  const abonnementSelection = clients.data.test_clients.filter(abonnement => abonnement.numbranchement == abonnementFilter)
+  console.log(abonnementSelection)
+
+  console.log("depuis header ", abonnementFilter)
+
     return (
       <>
         <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
           <Container fluid>
             <div className="header-body">
+              <Row className="pb-3">
+                <Col>
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret color="secondary">
+                      Abonnement
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      {
+                        clients.data.test_clients.map(client => 
+                          {
+                            return (
+                              <DropdownItem onClick={e => {selectAbonnement(e, client.numbranchement)}}>
+                                <DropdownItem divider />
+                                {String(client.numbranchement)}
+                              </DropdownItem>
+                            )
+                          }
+                        )
+                      }
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </Col>
+              </Row>
               {/* Card stats */}
               <Row>
                 <Col lg="6" xl="3">
@@ -38,88 +83,85 @@ class Header extends React.Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Traffic
+                            N° Client {abonnementSelection[0].numclient}
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            350,897
+                            {abonnementSelection[0].nomclient}
                           </span>
+                          <br></br>
+                          <span className="h4 font-weight-bold mb-0">
+                            {abonnementSelection[0].adressebranchement}
+                          </span>
+                          <br></br>
+                          <span className="mt-3 h5 font-weight-bold mb-0 text-nowrap danger">N° Branchement: {abonnementSelection[0].numbranchement}</span>
                         </div>
-                        <Col className="col-auto">
-                          <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
-                            <i className="fas fa-chart-bar" />
-                          </div>
-                        </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-success mr-2">
-                          <i className="fa fa-arrow-up" /> 3.48%
-                        </span>{" "}
-                        <span className="text-nowrap">Since last month</span>
-                      </p>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col lg="6" xl="3">
-                  <Card className="card-stats mb-4 mb-xl-0">
+                  <Card className="card-stats mb-4 mb-xl-0" color="info">
                     <CardBody>
                       <Row>
                         <div className="col">
                           <CardTitle
                             tag="h5"
-                            className="text-uppercase text-muted mb-0"
+                            className="text-uppercase text-white mb-0"
                           >
-                            BALANCE DU COMPTE
+                            FACTURATION
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">
-                            2,356
+                          <span className="h4 font-weight-bold mb-0">
+                            Nombres Factures : {facturation.facture}
+                          </span><br></br>
+                          <span className="h4 font-weight-bold mb-0">
+                            Total Facturation :  {facturation.total} Fcfa
                           </span>
                         </div>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-nowrap">Since last week</span>
-                      </p>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col lg="6" xl="3">
-                  <Card className="card-stats mb-4 mb-xl-0">
+                  <Card className="card-stats mb-4 mb-xl-0" color="danger">
                     <CardBody>
                       <Row>
                         <div className="col">
                           <CardTitle
                             tag="h5"
-                            className="text-uppercase text-muted mb-0"
+                            className="text-uppercase text-white mb-0"
                           >
-                            FACTURES IMPAYEES
+                            IMPAYEES
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">924</span>
+                          <span className="h4 font-weight-bold mb-0">
+                            Nombres Factures : {impayees.facture}
+                          </span><br></br>
+                          <span className="h4 font-weight-bold mb-0">
+                            Montant Dette :  {impayees.total} Fcfa
+                          </span>
                         </div>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-nowrap">Since yesterday</span>
-                      </p>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col lg="6" xl="3">
-                  <Card className="card-stats mb-4 mb-xl-0">
+                  <Card className="card-stats mb-4 mb-xl-0" color="success">
                     <CardBody>
                       <Row>
                         <div className="col">
                           <CardTitle
                             tag="h5"
-                            className="text-uppercase text-muted mb-0"
+                            className="text-uppercase text-white mb-0"
                           >
-                            DERNIERE FACTURE
+                            REGLEMENTS
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0">
-                            49,65%
+                          <span className="h4 font-weight-bold mb-0">
+                            Nombres Factures : {reglements.facture}
+                          </span><br></br>
+                          <span className="h4 font-weight-bold mb-0">
+                            Montant Règlement : {reglements.total} Fcfa
                           </span>
                         </div>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-nowrap">Since last month</span>
-                      </p>
                     </CardBody>
                   </Card>
                 </Col>
@@ -129,7 +171,5 @@ class Header extends React.Component {
         </div>
       </>
     );
-  }
 }
 
-export default Header;

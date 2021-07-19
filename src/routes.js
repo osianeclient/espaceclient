@@ -17,6 +17,7 @@
 */
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
+import Paiements from "views/examples/Paiements.js";
 //import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
@@ -24,33 +25,32 @@ import ForgotPassword from "views/examples/ForgotPassword.js"
 //import Tables from "views/examples/Tables.js";
 //import Icons from "views/examples/Icons.js";
 import Contrats from "views/examples/Contrats.js"
-import AddContrat from "views/examples/AddContrat.js"
 
 var routes = [
   {
     path: "/contrats",
-    name: "Contrats",
+    name: "Mes abonnements",
     icon: "ni ni-tv-2 text-primary",
     component: Contrats,
     layout: "/admin"
   },
   {
-    path: "/contrat/add",
-    name: "Ajouter un contrat",
-    icon: "ni ni-tv-2 text-primary",
-    component: AddContrat,
-    layout: "/admin"
-  },
-  {
     path: "/index",
-    name: "Tableau de bord",
-    icon: "ni ni-tv-2 text-primary",
+    name: "Mes factures",
+    icon: "ni ni-single-copy-04 text-info",
     component: Index,
     layout: "/admin"
   },
   {
+    path: "/paiements",
+    name: "Moyen de paiement",
+    icon: "ni ni-money-coins text-green",
+    component: Paiements,
+    layout: "/admin"
+  },
+  {
     path: "/user-profile",
-    name: "User Profile",
+    name: "Profile",
     icon: "ni ni-single-02 text-yellow",
     component: Profile,
     layout: "/admin"

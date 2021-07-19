@@ -52,7 +52,7 @@ import {
   Col
 } from "reactstrap";
 
-var ps;
+import Logo from "../../assets/img/brand/logo.png"
 
 class Sidebar extends React.Component {
   state = {
@@ -126,21 +126,21 @@ class Sidebar extends React.Component {
             <span className="navbar-toggler-icon" />
           </button>
           {/* Brand */}
-          {logo ? (
+          {Logo ? (
             <NavbarBrand className="pt-0" {...navbarBrandProps}>
               <img
                 alt={logo.imgAlt}
                 className="navbar-brand-img"
-                src={logo.imgSrc}
+                src={Logo}
               />
             </NavbarBrand>
           ) : null}
           {/* User */}
           <Nav className="align-items-center d-md-none">
             <UncontrolledDropdown nav>
-              <DropdownToggle nav className="nav-link-icon">
+              {<DropdownToggle nav className="nav-link-icon">
                 <i className="ni ni-bell-55" />
-              </DropdownToggle>
+              </DropdownToggle>}
               <DropdownMenu
                 aria-labelledby="navbar-default_dropdown_1"
                 className="dropdown-menu-arrow"
@@ -153,7 +153,7 @@ class Sidebar extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
             <UncontrolledDropdown nav>
-              <DropdownToggle nav>
+              {/*<DropdownToggle nav>
                 <Media className="align-items-center">
                   <span className="avatar avatar-sm rounded-circle">
                     <img
@@ -162,7 +162,7 @@ class Sidebar extends React.Component {
                     />
                   </span>
                 </Media>
-              </DropdownToggle>
+              </DropdownToggle>*/}
               {/*<DropdownMenu className="dropdown-menu-arrow" right>
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>

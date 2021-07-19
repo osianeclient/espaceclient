@@ -38,85 +38,62 @@ import {
 // core components
 import ContratHeader from "components/Headers/ContratHeader.js";
 
-class Contrats extends React.Component {
-  render() {
+import { useQuery } from '@apollo/client';
+import { GET_CLIENTS } from "../../queries.js";
+import { GET_FACTURES } from "../../queries";
+
+function Contrats() {
+    const numClient = JSON.parse(window.localStorage.getItem('authUser')).uid;
+    const client = useQuery(GET_CLIENTS, {variables: {"numclient": {"_eq": numClient}}})
+    const factures = useQuery(GET_FACTURES, {variables: {"numclient": {"_eq": numClient}}})
+
+    if(client.loading) return null;
+    if (client.error) return `Error! ${client.error}`;
+    console.log(client.data.test_clients)
+
+    if(factures.loading) return null;
+    if(factures.error) return `Error! ${factures.error}`;
+    console.log(factures.data.test_factures)
+
+
     return (
       <>
-        <ContratHeader />
+        <ContratHeader abonnement={client.data.test_clients} factures={factures.data.test_factures} />
         {/* Page content */}
         <Container className="mt--7" fluid>
           {/* Table */}
           <Row>
-            <div className="col mb-4">
-              <Link to="contrat/add">
-                <Button color="primary">Ajouter un contrat à votre compte</Button>
-              </Link>
-            </div>
-          </Row>
-          <Row>
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">Mes Contrats</h3>
+                  <h3 className="mb-0">Abonnements</h3>
                 </CardHeader>
                 <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
                       <th scope="col">N° Police</th>
-                      <th scope="col">Nom du client</th>
-                      <th scope="col">Dette</th>
-                      <th scope="col">Solde</th>
-                      <th scope="col">Addresse du Branchement</th>
-                      <th scope="col">Action</th>
+                      <th scope="col">N° Branchement</th>
+                      <th scope="col">Nom Client</th>
+                      <th scope="col">Adresse Branchement</th>
+                      <th scope="col">Ancien Index</th>
+                      <th scope="col">Nouvel Index</th>
+                      <th scope="col">Consommation</th>
+                      <th scope="col">Consommation Totale</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                      0749152V
-                      </td>
-                      <td>
-                      EFFEIND ARVICK LIONEL
-                      </td>
-                      <td>
-                        0
-                      </td>
-                      <td>
-                        37650
-                      </td>
-                      <td>
-                      3 BIS RUE SIBITI PLT DES 15 AN
-                      </td>
-                      <td className="text-right">
-                        <UncontrolledDropdown>
-                          <DropdownToggle
-                            className="btn-icon-only text-light"
-                            href="#pablo"
-                            role="button"
-                            size="sm"
-                            color=""
-                            onClick={e => e.preventDefault()}
-                          >
-                            <i className="fas fa-ellipsis-v" />
-                          </DropdownToggle>
-                          <DropdownMenu className="dropdown-menu-arrow" right>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={e => e.preventDefault()}
-                            >
-                              Détails
-                            </DropdownItem>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={e => e.preventDefault()}
-                            >
-                              Supprimer
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                      </td>
-                    </tr>
-                    
+                    {client.data.test_clients.map((d, index) => {
+                      return (<tr key={index}>
+                                <td>{d.numpolice}</td>
+                                <td>{d.numbranchement}</td>
+                                <td>{d.nomclient}</td>
+                                <td>{d.adressebranchement}</td>
+                                <td>{d.ancienindex}</td>
+                                <td>{d.nouvelindex}</td>
+                                <td>{d.consommation}</td>
+                                <td>{d.consommationtotale}</td>
+                            </tr>)
+                    })}
                   </tbody>
                 </Table>
                 <CardFooter className="py-4">
@@ -152,7 +129,6 @@ class Contrats extends React.Component {
         </Container>
       </>
     );
-  }
 }
 
 export default Contrats;

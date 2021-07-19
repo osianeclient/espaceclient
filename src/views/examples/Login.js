@@ -32,7 +32,8 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -56,13 +57,23 @@ function Login(props) {
     async function submit(data) {
         
         try {
-          //setError("")
-          //setLoading(true)
-          await login(data.email, data.password)
-          history.push("/admin/user-profile")
-        } catch {
-          //setError("Failed to log in")
-          //setLoading(false)
+          setError("")
+          setLoading(true)
+          const isUserVerified = await login(data.email, data.password)
+
+          if(isUserVerified.user.emailVerified){
+            history.push("/admin/index")
+          } else {
+            setError("Votre addresse email n'est pas vérifié")
+          }
+          
+        } catch(error) {
+          if(error.message === "user-not-found"){
+            setError("Il n'existe aucun enregistrement utilisateur correspondant à l'identifiant fourni.")
+          }else{
+            setError(error.message)
+          }
+          setLoading(false)
         }
     }
 
@@ -75,8 +86,8 @@ function Login(props) {
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              {error && <p>{error}</p>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
+              {error && <Alert className="text-center pb-2" color="danger">{error}</Alert>}
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -87,7 +98,7 @@ function Login(props) {
                     <Input {...register("email")} placeholder="Email" type="email" autoComplete="new-email"/>
                   </InputGroup>
                 </FormGroup>
-                <p>{errors.email?.message}</p>
+                <p className="text-danger">{errors.email?.message}</p>
                 <FormGroup>
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
@@ -98,7 +109,7 @@ function Login(props) {
                     <Input {...register("password")} placeholder="Mot de passe" type="password" autoComplete="new-password"/>
                   </InputGroup>
                 </FormGroup>
-                <p>{errors.password?.message}</p>
+                <p className="text-danger">{errors.password?.message}</p>
                 {/*<div className="custom-control custom-control-alternative custom-checkbox">
                   <input
                     className="custom-control-input"

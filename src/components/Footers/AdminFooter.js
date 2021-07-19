@@ -35,7 +35,7 @@ class Footer extends React.Component {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Energie Electrique du CONGO
+                ENERGIE ELECTRIQUE DU CONGO SA
               </a>
             </div>
           </Col>

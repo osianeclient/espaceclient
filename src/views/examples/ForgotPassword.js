@@ -32,7 +32,8 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -62,7 +63,7 @@ function ForgotPassword(props) {
           setMessage("Pour retrouver votre mot de passe un mail a été envoyé à " + data.email)
           setLoading(false)
         } catch {
-          setError("Failed to send reset password")
+          setError("Veuillez réessayer s'il vous plait")
           setLoading(false)
         }
     }
@@ -76,8 +77,7 @@ function ForgotPassword(props) {
               </div>
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
-              {error && <p>{error}</p>}
-              {message && <p>{message}</p>}
+              {(error && <Alert color="danger">{error}</Alert>) || message && <Alert color="success">{message}</Alert>}
               <Form onSubmit={handleSubmit(submit)} noValidate>
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">

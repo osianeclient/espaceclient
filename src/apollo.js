@@ -13,7 +13,7 @@ import Firebase from './firebase';
 const asyncAuthLink = setContext(async () => {
   return {
     headers: {
-      Authorization: `Bearer ${await Firebase.auth().currentUser.getIdToken()}`,
+      //Authorization: `Bearer ${await Firebase.auth().currentUser.getIdToken()}`,
     },
   };
 });

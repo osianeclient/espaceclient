@@ -69,24 +69,14 @@ function Profile () {
         alert("Modifié avec succès")
       })
       .catch((error) => {
-        console.log("Failed to update account")
+        console.log("La mise à jour a échoué")
       })
       //.finally(() => {
       //  setLoading(false)
       //})
   }
 
-  async function verify(){
-    try {
-      setMessage("")
-      await verifyEmail()
-      setMessage("Un mail de confirmation a été envoyé à " + currentUser.email)
-    } catch(error) {
-      alert(error)
-    }
-  }
 
-  console.log(currentUser)
     return (
       <>
         <UserHeader />
@@ -181,20 +171,6 @@ function Profile () {
             </Col>*/}
             <Col className="order-xl-1" xl="6">
               <Card className="bg-secondary shadow border-0">
-                {
-                  (message && currentUser.emailVerified === false)
-                  &&
-                  <div className="text-center text-success">
-                    {message}
-                  </div>
-                }
-                {
-                  currentUser.emailVerified === false 
-                  && 
-                  <div className="text-center mt-4 mb-4">
-                    Votre compte email n'est pas vérifié veuillez le <Button color="success" size="sm" onClick={verify}>Verifier</Button> pour ne pas le perdre
-                  </div>
-                }
                 <Form onSubmit={handleSubmit(submit)} noValidate>
                   <CardHeader className="bg-white border-0">
                     <Row className="align-items-center">

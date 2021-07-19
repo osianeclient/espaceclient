@@ -22,23 +22,29 @@ const client = new request.GraphQLClient("https://safe-tiger-57.hasura.app/v1/gr
 admin.initializeApp(functions.config().firebase);
 
 exports.registerUser = functions.https.onCall(async (data) => {
-  const { email, password, ville, numClient } = data;
+  const { email, password, ville, numClient, tel} = data;
   const query = `
-    query($numClient: String_comparison_exp = {}, $_eq: String = "", $centre: String_comparison_exp = {}) {
-      V1_clients(where: {centre: $centre, numClient: $numClient}){
-        id
+    query($numclient: String_comparison_exp = {}, $centre: Int_comparison_exp = {}) {
+      test_clients(where: {numclient: $numclient, centre: $centre}){
         centre
-        numClient
+        numclient
+      }
+    }
+  `;
+  const mutation = `
+    mutation($centre: Int, $email: String, $id: String, $tel: String) {
+      insert_test_users(objects: {centre: $centre, email: $email, id: $id, tel: $tel}, on_conflict: {constraint: users_pkey}) {
+        affected_rows
       }
     }
   `;
 
   try {
     const data = await client.request(query, {"centre": {"_eq": ville},
-      "numClient": {"_eq": numClient}
+      "numclient": {"_eq": numClient}
     });
 
-    if(data.V1_clients.length === 0){
+    if(data.test_clients.length === 0){
       throw new functions.https.HttpsError('not-found', "La combinaison de votre ville et votre numéro client n'est pas repertorié, veuillez réessayer avec des informations correctes ou vous rapprocher d'une agence")
     }
   } catch (e) {
@@ -55,7 +61,7 @@ exports.registerUser = functions.https.onCall(async (data) => {
 
   try {
     // We create our user using the firebase admin sdk
-    const userRecord = await admin.auth().createUser({ email, password });
+    const userRecord = await admin.auth().createUser({uid: numClient, email, password });
 
     // We set our user role and the x-hasura-user-id claims
     // Remember, the x-hasura-user-id is what Hasura uses to check
@@ -69,18 +75,38 @@ exports.registerUser = functions.https.onCall(async (data) => {
     };
 
     await admin.auth().setCustomUserClaims(userRecord.uid, customClaims);
+
+    try {
+      const user = await client.request(
+        mutation, 
+        {
+          "centre": ville, 
+          "email": email, 
+          "id": numClient, 
+          "tel": tel
+        }
+      );
+      console.log(user)
+    } catch (e) {
+      throw new functions.https.HttpsError('invalid-argument', e.message);
+    }
+
     return userRecord.toJSON();
 
   } catch (e) {
     let errorCode = "unknown";
-    let msg = "Something went wrong, please try again later";
+    let msg = "Nous n'avons pas pu créer votre compte, veuillez réessayer s'il vous plait";
     if (e.code === "auth/email-already-exists") {
       // If a user that already has an account tries to sign up
       // we want to show them a proper error and instruct them to log in
       errorCode = "already-exists";
       msg = "L'addresse " + email + " est déjà associée à un utilisateur";
     }
-    throw new functions.https.HttpsError(errorCode, msg);
+
+    if (e.code === "uid-already-exists") {
+      msg = "Un utilisateur c'est déjà connecté avec le numéro client saisi"
+    }
+    throw new functions.https.HttpsError(msg);
   }
 });
 
@@ -90,7 +116,7 @@ exports.processSignUp = functions.auth.user().onCreate(async user => {
   const { uid: id, email } = user;
   const mutation = `
     mutation($id: String!, $email: String) {
-      insert_V1_users(objects: [{
+      insert_test_users(objects: [{
         id: $id,
         email: $email,
       }]) {
@@ -98,9 +124,6 @@ exports.processSignUp = functions.auth.user().onCreate(async user => {
       }
     }
   `;
-
-  const doc = await admin.firestore().collection("users").doc(id).get()
-  console.log(doc)
   
   /*try {
     const data = await client.request(mutation, { id, email });
@@ -116,7 +139,7 @@ exports.processSignUp = functions.auth.user().onCreate(async user => {
 exports.processDelete = functions.auth.user().onDelete(async (user) => {
   const mutation = `
     mutation($id: String!) {
-      delete_V1_users(where: {id: {_eq: $id}}) {
+      delete_test_users(where: {id: {_eq: $id}}) {
         affected_rows
       }
     }

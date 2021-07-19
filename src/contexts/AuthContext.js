@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('authUser')))
   const [loading, setLoading] = useState(false)
 
-  function signup(email, password, ville, numClient) {
+  function signup(email, password, ville, numClient, tel) {
     const registerUser = fns.httpsCallable('registerUser');
-    return registerUser({email, password, ville, numClient})
+    return registerUser({email, password, ville, numClient, tel})
   }
 
   function verifyEmail(){
@@ -41,16 +41,22 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password)
   }
 
+  function getCurrentUser(){
+    return JSON.parse(window.localStorage.getItem('authUser'));
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(authUser => {
       if(authUser) {
         localStorage.setItem("authUser", JSON.stringify(authUser))
         setCurrentUser(authUser)
+        console.log("I am changing to online")
       } else {
         localStorage.removeItem("authUser")
         setCurrentUser(null)
+        console.log("I am changing to offline")
       }
-      console.log(currentUser)
+      
       setLoading(false)
     })
 
@@ -65,7 +71,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmail,
     updatePassword,
-    verifyEmail
+    verifyEmail,
+    getCurrentUser
   }
 
   return (

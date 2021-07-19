@@ -32,11 +32,11 @@ class Login extends React.Component {
                 <div className="copyright text-center text-xl-left text-muted">
                   © 2021{" "}
                   <a
-                    className="font-weight-bold ml-1"
-                    href="https://www.creative-tim.com?ref=adr-auth-footer"
+                    className="font-weight-bold ml-1 text-white"
+                    href="https://e2c.cg"
                     target="_blank"
                   >
-                    Energie Electrique du CONGO
+                    ENERGIE ELECTRIQUE DU CONGO SA
                   </a>
                 </div>
               </Col>

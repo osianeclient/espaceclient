@@ -24,6 +24,7 @@ import { Container, Row, Col } from "reactstrap";
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import AuthFooter from "components/Footers/AuthFooter.js";
 
+
 import routes from "routes.js";
 
 class Auth extends React.Component {
@@ -58,8 +59,8 @@ class Auth extends React.Component {
               <div className="header-body text-center mb-7">
                 <Row className="justify-content-center">
                   <Col lg="5" md="6">
-                    <h1 className="text-white">Bienvenu!</h1>
-                    <p className="text-lead text-light">
+                    <h1 className="text-white">Bienvenue!</h1>
+                    <p className="text-lead text-white">
                       Vivez une expérience client en ligne.
                     </p>
                   </Col>
