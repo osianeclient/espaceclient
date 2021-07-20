@@ -37,61 +37,17 @@ class AdminNavbar extends React.Component {
     return (
       <>
         <Navbar
-          className="navbar-top navbar-horizontal navbar-dark"
+          className="navbar-top-auth navbar-horizontal navbar-dark"
           expand="md"
         >
-          <Container className="px-4">
-            <NavbarBrand to="/" tag={Link} className="text-white">
-              <img alt="Energie Electrique du CONGO" src={Logo} /> Energie Electrique du CONGO SA
-            </NavbarBrand>
-            <button className="navbar-toggler" id="navbar-collapse-main">
-              <span className="navbar-toggler-icon" />
-            </button>
-            <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
-              <div className="navbar-collapse-header d-md-none">
-                <Row>
-                  <Col className="collapse-brand" xs="6">
-                    <Link to="/">
-                      <img
-                        alt="Energie Electrique du CONGO"
-                        src={Logo}
-                      />
-                    </Link>
-                  </Col>
-                  <Col className="collapse-close" xs="6">
-                    <button
-                      className="navbar-toggler"
-                      id="navbar-collapse-main"
-                    >
-                      <span />
-                      <span />
-                    </button>
-                  </Col>
-                </Row>
-              </div>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink
-                    className="nav-link-icon"
-                    to="/auth/register"
-                    tag={Link}
-                  >
-                    <i className="ni ni-circle-08" />
-                    <span className="nav-link-inner--text">S'enregistrer</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className="nav-link-icon"
-                    to="/auth/login"
-                    tag={Link}
-                  >
-                    <i className="ni ni-key-25" />
-                    <span className="nav-link-inner--text">Se connecter</span>
-                  </NavLink>
-                </NavItem>
-              </Nav>
-            </UncontrolledCollapse>
+          <Container className="nav-bottom">
+            <Row className="justify-content-md-center mx-auto">
+              <Col lg={{size: "auto"}}>
+                <Link to="/" tag={Link} className="mx-auto">
+                  <img alt="Energie Electrique du CONGO" src={Logo} width="240" height="112" />
+                </Link>
+              </Col>
+            </Row>
           </Container>
         </Navbar>
       </>

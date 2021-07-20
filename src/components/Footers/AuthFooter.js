@@ -21,22 +21,21 @@ import React from "react";
 // reactstrap components
 import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
 
+
 class Login extends React.Component {
   render() {
     return (
       <>
-        <footer className="py-5">
+        <footer className="py-4 footer-e2c">
           <Container>
-            <Row className="align-items-center justify-content-xl-between">
-              <Col xl="6">
-                <div className="copyright text-center text-xl-left text-muted">
-                  © 2021{" "}
+            <Row className="align-items-center">
+              <Col xl="12">
+                <div className="text-center">
                   <a
-                    className="font-weight-bold ml-1 text-white"
                     href="https://e2c.cg"
                     target="_blank"
                   >
-                    ENERGIE ELECTRIQUE DU CONGO SA
+                    2021 Copyright E²C
                   </a>
                 </div>
               </Col>

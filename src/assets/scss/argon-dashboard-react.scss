@@ -16,6 +16,9 @@
 
 */
 
+
+
+
 // Core
 
 @import "argon-dashboard/custom/functions";
@@ -80,3 +83,24 @@
 
 // React Differences
 @import "react/react-differences";
+
+// custom css
+
+.nav-bottom {
+    border-bottom: 1px solid #ABABAB;
+    padding-bottom: 20px;
+}
+
+.auth-header-text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bolder;
+    font-size: 36px;
+    line-height: 43px;
+    /* or 119% */
+
+    text-align: center;
+    text-transform: capitalize;
+
+    color: #000030;
+}

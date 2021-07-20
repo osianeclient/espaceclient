@@ -3,3 +3,18 @@
 //
 
 @import "footers/footer";
+
+.footer-e2c {
+    background: #F5E034;
+    height: 68px;
+    //box-shadow: 0px 3px 4px rgba(0,0,0,0.8);
+    border-top-left-radius: 45px;
+    border-top-right-radius: 45px;
+    color: #000030;
+
+    a {
+        color: #000030;
+        font-weight: 500;
+        font-size: 20px;
+    }
+}
